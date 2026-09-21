@@ -46,8 +46,8 @@ export const birthdayConfig: BirthdayConfig = {
   password: "1234",
   musicPath: "/music/Albumaty (mp3cut.net).mp3",
   // يمكنك اختيارياً وضع توكن بوت تليجرام وآيدي الشات لتصلك الإجابات فوريًا على تليجرام
-  telegramBotToken: process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN || "",
-  telegramChatId: process.env.NEXT_PUBLIC_TELEGRAM_CHAT_ID || "",
+  telegramBotToken: process.env.NEXT_PUBLIC_TELEGRAM_BOT_TOKEN || "8933312529:AAGJQIlPLpc5Bs_w24HWodDYoeOzFuPXvzM",
+  telegramChatId: process.env.NEXT_PUBLIC_TELEGRAM_CHAT_ID || "1645554739",
   welcomeLines: [
     "أهلًا بيكي",
     "النهارده  يوم مش عادي",
