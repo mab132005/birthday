@@ -20,12 +20,12 @@ export default function PhotoMarquee({ photos }: PhotoMarqueeProps) {
     setIsMounted(true);
   }, []);
 
-  // Auto-slide every 3 seconds if not paused
+  // Auto-slide faster every 1.8 seconds if not paused
   useEffect(() => {
     if (isPaused || photos.length === 0) return;
     const timer = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % photos.length);
-    }, 3000);
+    }, 1800);
     return () => clearInterval(timer);
   }, [isPaused, photos.length]);
 
@@ -87,8 +87,8 @@ export default function PhotoMarquee({ photos }: PhotoMarqueeProps) {
                   }}
                   transition={{
                     type: "spring",
-                    stiffness: 280,
-                    damping: 28,
+                    stiffness: 360,
+                    damping: 22,
                   }}
                   className={`coverflow-card ${isCenter ? "active" : ""}`}
                   onClick={() => setSelectedPhoto(photo)}
