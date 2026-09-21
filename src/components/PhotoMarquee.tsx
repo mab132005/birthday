@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { Heart, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Heart, X } from "lucide-react";
 import { GalleryPhoto } from "@/config/birthday";
 
 interface PhotoMarqueeProps {
@@ -11,49 +11,117 @@ interface PhotoMarqueeProps {
 }
 
 export default function PhotoMarquee({ photos }: PhotoMarqueeProps) {
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedPhoto, setSelectedPhoto] = useState<GalleryPhoto | null>(null);
   const [isMounted, setIsMounted] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
-  const total = photos.length;
-  const radius = useMemo(() => {
-    if (total <= 1) return 180;
-    const cardWidth = 120;
-    const calcRadius = Math.round(cardWidth / (2 * Math.tan(Math.PI / total)));
-    return Math.max(calcRadius + 40, 260);
-  }, [total]);
+  // Auto-slide every 3 seconds if not paused
+  useEffect(() => {
+    if (isPaused || photos.length === 0) return;
+    const timer = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % photos.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, [isPaused, photos.length]);
 
-  const angleStep = 360 / total;
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % photos.length);
+  };
+
+  const handlePrev = () => {
+    setCurrentIndex((prev) => (prev - 1 + photos.length) % photos.length);
+  };
 
   return (
-    <div className="photo-ring-stage">
-      <div className="photo-ring-spinner">
-        {photos.map((photo, index) => {
-          const angle = index * angleStep;
-          return (
-            <div
-              key={photo.id}
-              className="photo-ring-item"
-              style={{
-                transform: `rotateY(${angle}deg) translateZ(${radius}px)`,
-              }}
-              onClick={() => setSelectedPhoto(photo)}
-            >
-              <div className="photo-frame ring-frame">
-                <img src={photo.url} alt={photo.alt} loading="lazy" />
-                <div className="photo-heart-badge">
-                  <Heart size={12} fill="#e11d48" color="#e11d48" />
-                </div>
-              </div>
-            </div>
-          );
-        })}
+    <div
+      className="coverflow-container"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      onTouchStart={() => setIsPaused(true)}
+      onTouchEnd={() => setIsPaused(false)}
+    >
+      <div className="coverflow-stage">
+        <button
+          className="coverflow-arrow left"
+          onClick={handlePrev}
+          aria-label="Previous photo"
+        >
+          <ChevronLeft size={22} />
+        </button>
+
+        <div className="coverflow-cards-wrap">
+          <AnimatePresence mode="popLayout" initial={false}>
+            {[-1, 0, 1].map((offset) => {
+              const photoIndex =
+                (currentIndex + offset + photos.length) % photos.length;
+              const photo = photos[photoIndex];
+              if (!photo) return null;
+
+              const isCenter = offset === 0;
+
+              return (
+                <motion.div
+                  key={`${photo.id}-${offset}`}
+                  initial={{
+                    opacity: 0,
+                    x: offset * 110,
+                    scale: 0.75,
+                    rotateY: offset * 25,
+                  }}
+                  animate={{
+                    opacity: isCenter ? 1 : 0.55,
+                    x: offset * 105,
+                    scale: isCenter ? 1 : 0.82,
+                    rotateY: offset * -20,
+                    zIndex: isCenter ? 10 : 5 - Math.abs(offset),
+                  }}
+                  exit={{
+                    opacity: 0,
+                    x: offset * 110,
+                    scale: 0.75,
+                  }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 280,
+                    damping: 28,
+                  }}
+                  className={`coverflow-card ${isCenter ? "active" : ""}`}
+                  onClick={() => setSelectedPhoto(photo)}
+                >
+                  <div className="coverflow-photo-frame">
+                    <img src={photo.url} alt={photo.alt} loading="lazy" />
+                    <div className="photo-heart-badge">
+                      <Heart size={14} fill="#e11d48" color="#e11d48" />
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+        </div>
+
+        <button
+          className="coverflow-arrow right"
+          onClick={handleNext}
+          aria-label="Next photo"
+        >
+          <ChevronRight size={22} />
+        </button>
       </div>
 
-      {/* Lightbox Modal rendered directly in document.body via Portal */}
+      {/* Counter & Indicator dots */}
+      <div className="coverflow-counter">
+        <span>
+          صورة {currentIndex + 1} من {photos.length}
+        </span>
+      </div>
+
+      {/* Lightbox Modal via Portal */}
       {isMounted &&
         createPortal(
           <AnimatePresence>

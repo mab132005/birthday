@@ -284,68 +284,110 @@ textarea {
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
 }
 
-/* --- 3D CIRCULAR PHOTO RING (CONNECTED CIRCLE) --- */
-.photo-ring-stage {
+/* --- COVERFLOW SMOOTH MOBILE CAROUSEL --- */
+.coverflow-container {
+  width: 100%;
+  position: relative;
+  margin: 10px 0 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.coverflow-stage {
   position: relative;
   width: 100%;
-  height: 380px;
-  perspective: 900px;
+  height: 270px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: -15px 0 -10px;
-  mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
-  -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+  perspective: 1000px;
 }
 
-.photo-ring-spinner {
+.coverflow-cards-wrap {
   position: relative;
-  width: 120px;
-  height: 160px;
-  transform-style: preserve-3d;
-  animation: rotate3dRing 70s linear infinite;
-  will-change: transform;
+  width: 180px;
+  height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-@keyframes rotate3dRing {
-  0% {
-    transform: rotateX(-4deg) rotateY(0deg);
-  }
-  100% {
-    transform: rotateX(-4deg) rotateY(-360deg);
-  }
-}
-
-.photo-ring-item {
+.coverflow-card {
   position: absolute;
-  inset: 0;
-  transform-style: preserve-3d;
+  width: 180px;
+  height: 240px;
   cursor: pointer;
-  transition: filter 0.3s ease;
+  will-change: transform, opacity;
+  transform-style: preserve-3d;
 }
 
-.photo-frame {
-  position: relative;
-  width: 170px;
-  height: 220px;
+.coverflow-photo-frame {
+  width: 100%;
+  height: 100%;
   padding: 8px 8px 24px 8px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 18px;
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(8px);
+  border-radius: 20px;
+  background: rgba(35, 18, 30, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(10px);
+  position: relative;
   overflow: hidden;
-  transition: transform 0.3s ease, border-color 0.3s ease;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.photo-frame.ring-frame {
-  width: 120px;
-  height: 160px;
-  padding: 6px 6px 18px 6px;
+.coverflow-card.active .coverflow-photo-frame {
+  border-color: rgba(245, 191, 209, 0.8);
+  box-shadow: 0 20px 40px rgba(225, 29, 72, 0.3), 0 0 0 1px rgba(245, 191, 209, 0.5);
+}
+
+.coverflow-photo-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   border-radius: 14px;
-  background: rgba(35, 18, 30, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+}
+
+.coverflow-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: var(--pink);
+  display: grid;
+  place-items: center;
+  z-index: 20;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: all 0.2s ease;
+}
+
+.coverflow-arrow:active {
+  transform: translateY(-50%) scale(0.92);
+  background: rgba(245, 191, 209, 0.25);
+}
+
+.coverflow-arrow.left {
+  left: 8px;
+}
+
+.coverflow-arrow.right {
+  right: 8px;
+}
+
+.coverflow-counter {
+  margin-top: 10px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--pink);
+  font-size: 0.85rem;
+  font-weight: 700;
 }
 
 .photo-frame:hover {
