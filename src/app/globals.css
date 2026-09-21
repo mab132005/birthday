@@ -184,27 +184,27 @@ textarea {
   border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
-.back-btn,
-.mini-player {
-  position: fixed;
-  top: 18px;
-  z-index: 10;
-  display: inline-flex;
+.media-controls-wrap {
+  display: flex;
   align-items: center;
   gap: 8px;
-  padding: 10px 14px;
-  background: rgba(18, 12, 20, 0.5);
-  color: var(--foreground);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(10px);
 }
 
-.back-btn {
-  left: 18px;
-}
-
+.back-btn,
 .mini-player {
-  right: 18px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  background: rgba(18, 12, 20, 0.75);
+  color: var(--foreground);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .romantic-btn:hover,
@@ -750,9 +750,20 @@ textarea {
 
 .top-controls {
   position: fixed;
-  inset: 0 0 auto 0;
-  height: 74px;
-  z-index: 20;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 90;
+  pointer-events: none;
+}
+
+.top-controls button {
+  pointer-events: auto;
 }
 
 @media (max-width: 640px) {
@@ -762,8 +773,8 @@ textarea {
 
   .screen {
     min-height: auto;
-    padding-top: 80px;
-    padding-bottom: 12px;
+    padding-top: 76px;
+    padding-bottom: 16px;
   }
 
   .content-panel {

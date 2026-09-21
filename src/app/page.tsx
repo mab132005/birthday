@@ -337,7 +337,7 @@ export default function Home() {
       <div className="glow-orb orb-2" />
 
       <div className="top-controls">
-        {screen !== "password" && screen !== "final" && (
+        {screen !== "password" && screen !== "final" ? (
           <button
             className="back-btn"
             onClick={() => {
@@ -363,16 +363,17 @@ export default function Home() {
               }
             }}
           >
-            <ArrowLeft size={18} />
-            رجوع
+            <ArrowLeft size={16} />
+            <span>رجوع</span>
           </button>
+        ) : (
+          <div />
         )}
 
         {screen !== "password" && (
-          <>
+          <div className="media-controls-wrap">
             <button
               className="mini-player"
-              style={{ right: screen === "final" ? 18 : 104 }}
               onClick={() => {
                 playSfx("click");
                 if (isPlaying) {
@@ -383,22 +384,21 @@ export default function Home() {
                 }
               }}
             >
-              {isPlaying ? <Pause size={15} /> : <Play size={15} />}
+              {isPlaying ? <Pause size={14} /> : <Play size={14} />}
               <span>{isPlaying ? "إيقاف" : "تشغيل"}</span>
             </button>
 
             <button
               className="mini-player"
-              style={{ right: 18, top: 18 + 48 }}
               onClick={() => {
                 playSfx("click");
                 setMuted((prev) => !prev);
               }}
             >
-              {muted ? <VolumeX size={15} /> : <Volume2 size={15} />}
+              {muted ? <VolumeX size={14} /> : <Volume2 size={14} />}
               <span>{muted ? "صوت" : "كتم"}</span>
             </button>
-          </>
+          </div>
         )}
       </div>
 
